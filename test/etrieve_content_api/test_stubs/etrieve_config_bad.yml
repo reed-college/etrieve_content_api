@@ -1,0 +1,7 @@
+---
+username: 'test_monkey'
+password: 'funky_banana'
+base_url: 'http://apibase.example.com'
+auth_url: 'https://apiauth.example.com/idsrv/connect/token?'
+  timeout: 6
+verify_ssl: false

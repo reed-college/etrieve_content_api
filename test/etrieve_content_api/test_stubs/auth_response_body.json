@@ -1,0 +1,5 @@
+{
+  "access_token": "someToken",
+  "expires_in": 900,
+  "token_type": "Bearer"
+}
