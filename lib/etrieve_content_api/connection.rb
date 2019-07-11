@@ -6,6 +6,7 @@ module EtrieveContentApi
     attr_reader :connection
     attr_reader :headers
     attr_reader :timeout
+    attr_reader :expires_at
     attr_reader :username
     attr_reader :verify_ssl
 
@@ -38,6 +39,7 @@ module EtrieveContentApi
     end
 
     def connect
+      return @connection if @connection && active?
       begin
         resp = post_custom_connection(
           auth_url,
@@ -57,10 +59,26 @@ module EtrieveContentApi
       if @access_token
         @headers = { authorization: "Bearer #{@access_token}" }
         @connection = results
+        @expires_at = Time.now + results['expires_in'].to_i
       else
-        @connection = false
+        reset!
       end
       results
+    end
+
+    def connect!
+      reset!
+      connect
+    end
+
+    def active?
+      return false unless @expires_at.is_a?(Time)
+      return false if @expires_at < Time.now - 5
+      true
+    end
+
+    def reset!
+      configure(@config)
     end
 
     def get(path, headers: {}, &block)
@@ -126,18 +144,19 @@ module EtrieveContentApi
 
     # Configure using hash
     def configure(opts = {})
-      config = clean_config_hash(opts)
+      @config = clean_config_hash(opts)
 
       @access_token = nil
-      @auth_url = config[:auth_url] || ''
-      @base_url = config[:base_url] || ''
+      @auth_url = @config[:auth_url] || ''
+      @base_url = @config[:base_url] || ''
       @connection = nil
       @headers = {}
       @request_headers = {}
-      @password = config[:password] || ''
-      @timeout = config[:timeout] || 30
-      @username = config[:username] || ''
-      @verify_ssl = config[:verify_ssl] != false
+      @password = @config[:password] || ''
+      @timeout = @config[:timeout] || 30
+      @username = @config[:username] || ''
+      @verify_ssl = @config[:verify_ssl] != false
+      @expires_at = nil
     end
 
     # Configure with yaml
