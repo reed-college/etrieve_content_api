@@ -43,6 +43,22 @@ module EtrieveContentApi
       get_json DOCUMENTS_PATH, query: query_s, headers: headers, &block
     end
 
+    # Calls #document_metadata in a loop retrieving per_request number of
+    # documents until all matching docs are retrieved or loop_max is reached
+    def all_document_metadata(
+      query: {}, headers: {}, per_request: 25, loop_max: 10, &block
+    )
+      query[:limit] = per_request
+      out = []
+      loop_max.times do
+        docs, resp_headers = document_metadata(query: query, headers: headers, &block)
+        docs.empty? ? break : out << docs
+        break if resp_headers[:x_hasmore] == 'False'
+        query[:offset] = (query[:offset] || 0) + per_request
+      end
+      out.flatten
+    end
+
     # Get content of a document
     # query:
     #   include_annotations: include all annotations? true/false
@@ -82,11 +98,13 @@ module EtrieveContentApi
       r = get path, query: query, headers: headers, &block
       return { message: r } unless r.respond_to?(:body)
 
-      begin
+      json = begin
         JSON.parse(r.body)
       rescue JSON::ParserError
         {}
       end
+
+      [json, r.headers]
     end
 
     private
