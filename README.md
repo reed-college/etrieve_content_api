@@ -1,6 +1,6 @@
 # EtrieveContentApi
 
-Ruby wrapper for accessing the Etrieve Content API. Document retrieval is supported. Writes may be supported in a future version.
+Ruby wrapper for accessing the Etrieve Content API. Document metadata and content retrieval is currently supported. Document writes may be supported in a future version.
 
 ## Installation
 
@@ -47,6 +47,9 @@ Configuration can be read from a YAML file by passing the file path. The file sh
 
 ## Usage
 ### Basic Request
+
+See [Handler](lib/etrieve_content_api/handler.rb) class for prebuilt requests for things like document metadata and content.
+
 ```ruby
 require 'etrieve_content_api'
 handler = EtrieveContentApi::Handler.new(config_hash_or_path_to_config_yaml)
