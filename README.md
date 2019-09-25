@@ -28,7 +28,7 @@ Configuration can be passed as a hash.
   auth_url: 'https://example.com/auth', # default: ''
   base_url: 'https://example.com/api', # default: ''
   password: password, # default: ''
-  username: username, # default: ''
+  username: username, # default: '' - might be a client_id as opposed to a user login
   timeout: 1, # default: 30 seconds
   verify_ssl: false # default: true
 }
