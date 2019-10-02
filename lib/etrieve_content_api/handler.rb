@@ -107,6 +107,25 @@ module EtrieveContentApi
       [json, r.headers]
     end
 
+    # Format a request and pass it on to the connection's post method
+    def post(path = '', params: {}, headers: {}, &block)
+      connection.post path, payload: params, headers: headers, &block
+    end
+
+    # Process content from #post and parse JSON from body.
+    def post_json(path = '', params: {}, headers: {}, &block)
+      r = post path, params: params, headers: headers, &block
+      return { message: r } unless r.respond_to?(:body)
+
+      json = begin
+        JSON.parse(r.body)
+      rescue JSON::ParserError
+        {}
+      end
+
+      [json, r.headers]
+    end
+
     private
 
     def encoded_query(query: {}, keys_allowed: :all)

@@ -263,6 +263,30 @@ describe EtrieveContentApi::Handler do
       end
     end
 
+    describe 'post' do
+      describe 'valid request' do
+        before do
+          @path = 'go/here'
+          @stubbed_request = stub_request(
+            :post,
+            [@base_url, @path].join('/')
+          ).to_return(
+            status: 200,
+            body: '{"thing": "Something interesting"}'
+          )
+        end
+
+        it 'should request path' do
+          @handler.post(@path)
+          assert_requested @stubbed_request
+        end
+
+        it 'should return response object' do
+          @handler.post(@path).must_be_kind_of RestClient::Response
+        end
+      end
+    end
+
     describe 'get_json' do
       describe 'valid request' do
         before do
@@ -300,5 +324,44 @@ describe EtrieveContentApi::Handler do
         output.must_equal [{}, {}]
       end
     end
+
+    describe 'post_json' do
+      describe 'valid request' do
+        before do
+          @path = 'go/here'
+          @stubbed_request = stub_request(
+            :post,
+            [@base_url, @path].join('/')
+          ).to_return(
+            status: 200,
+            body: '{"thing": "Something interesting"}'
+          )
+        end
+
+        it 'should request path' do
+          @handler.post_json(@path)
+          assert_requested @stubbed_request
+        end
+
+        it 'should return response object' do
+          @handler.post_json(@path).must_be_kind_of Array
+        end
+      end
+
+      it 'should return empty hash for invalid json' do
+        path = 'go/here'
+        stub_request(
+          :post,
+          [@base_url, path].join('/')
+        ).to_return(
+          status: 200,
+          body: 'Not JSON'
+        )
+        output = @handler.post_json(path)
+        output.must_be_kind_of Array
+        output.must_equal [{}, {}]
+      end
+    end
+
   end
 end
