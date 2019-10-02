@@ -71,7 +71,7 @@ describe EtrieveContentApi::Handler do
       stub_connection_round_trip(@handler.connection)
     end
 
-    describe 'document_metadata' do
+    describe 'document' do
       it 'should get document document metadata path' do
         stubbed_request = stub_request(
           :get,
@@ -86,7 +86,7 @@ describe EtrieveContentApi::Handler do
           :get,
           [@base_url, EtrieveContentApi::Handler::DOCUMENTS_PATH].join('/')
         )
-        @handler.document_metadata.must_be_kind_of Hash
+        @handler.document_metadata.must_be_kind_of Array
       end
 
       it 'should restrict query to DOCUMENT_METADATA_PARAMS' do
@@ -282,11 +282,11 @@ describe EtrieveContentApi::Handler do
         end
 
         it 'should return response object' do
-          @handler.get_json(@path).must_be_kind_of Hash
+          @handler.get_json(@path).must_be_kind_of Array
         end
       end
 
-      it 'should return empty hash for invalid json' do
+      it 'should return empty hashes for invalid json' do
         path = 'go/here'
         stub_request(
           :get,
@@ -296,8 +296,8 @@ describe EtrieveContentApi::Handler do
           body: 'Not JSON'
         )
         output = @handler.get_json(path)
-        output.must_be_kind_of Hash
-        output.must_be :empty?
+        output.must_be_kind_of Array
+        output.must_equal [{}, {}]
       end
     end
   end

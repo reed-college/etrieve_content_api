@@ -270,8 +270,8 @@ describe EtrieveContentApi::Connection do
         @conn.connect
       end
 
-      it 'should set connection to false' do
-        @conn.instance_variable_get(:@connection).must_equal false
+      it 'should set connection to nil' do
+        @conn.instance_variable_get(:@connection).must_be_nil
       end
 
       it 'should set access_token to nil' do
