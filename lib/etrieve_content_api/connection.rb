@@ -197,7 +197,7 @@ module EtrieveContentApi
         when 200
           return response
         when 401
-          raise AuthenticationError, response.body
+          raise AuthenticationError
         else
           # Some other error. Let it bubble up.
           response.return!(&block)
