@@ -86,6 +86,25 @@ module EtrieveContentApi
       get path, query: query_s, headers: headers, &block
     end
 
+    # Creates a new document, returns JSON results of operation, including
+    # new document ID
+    def create_document(area_code: '', document_name: '', key_fields: {}, headers: {}, &block)
+      headers = headers.empty? ? { "Content-Type" => "application/json" } : headers
+      field_values = []
+      key_fields.each do |key, value|
+        field_values << {
+          fieldCode: key,
+          value: value
+        }
+      end
+      params = {
+        areaCode: area_code,
+        documentTypeCode: document_name,
+        fieldValues: field_values
+      }.to_json
+      post_json DOCUMENTS_PATH, params: params, headers: headers, &block
+    end
+
     # Format a request and pass it on to the connection's get method
     def get(path = '', query: '', headers: {}, &block)
       query = query.empty? ? nil : query

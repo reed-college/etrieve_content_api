@@ -120,6 +120,15 @@ describe EtrieveContentApi::Handler do
         )
         assert_requested stubbed_request
       end
+
+      it 'should create document' do
+        stubbed_request = stub_request(
+          :post,
+          [@base_url, EtrieveContentApi::Handler::DOCUMENTS_PATH].join('/')
+        )
+        @handler.create_document(area_code: 'Students', document_name: 'ACT_Test_Scores').must_be_kind_of Array
+        assert_requested stubbed_request
+      end
     end
 
     describe 'document_content' do
