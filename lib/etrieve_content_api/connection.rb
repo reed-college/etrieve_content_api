@@ -51,7 +51,7 @@ module EtrieveContentApi
         )
         results = JSON.parse(resp)
       rescue RestClient::ExceptionWithResponse => err
-        results = JSON.parse(err.response)
+        results = err.respond_to?(:response) ? JSON.parse(err.response) : err
       rescue
         results = { error: $!.message }
       end
