@@ -92,10 +92,7 @@ module EtrieveContentApi
       headers = headers.empty? ? { "Content-Type" => "application/json" } : headers
       field_values = []
       key_fields.each do |key, value|
-        field_values << {
-          fieldCode: key,
-          value: value
-        }
+        field_values << "{'fieldCode': '#{key}', 'value': '#{value}'}"
       end
       params = {
         areaCode: area_code,
