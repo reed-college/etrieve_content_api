@@ -105,6 +105,25 @@ module EtrieveContentApi
       post_json DOCUMENTS_PATH, params: params, headers: headers, &block
     end
 
+    # Sets the contents of an existing document
+    def set_document_content(document_id, file_path, headers: {}, &block)
+      file = begin
+          File.open(file_path)
+        rescue Errno::ENOENT
+        end
+      raise AttributeMissingError, 'Valid file or local filepath is required to submit a document.' unless file.is_a?(File)
+
+      path = [DOCUMENTS_PATH, document_id, 'contents'].join('/')
+      headers = headers.merge({
+                  'X-File-Attributes' => {
+                    'filename' => File.basename(file.path),
+                    'contenttype' => MIME::Types.type_for(file.path).first.content_type
+                  }.to_json,
+                  'Content-Length' => File.size(file.path)
+                })
+      post_json path, params: file, headers: headers
+    end
+
     # Format a request and pass it on to the connection's get method
     def get(path = '', query: '', headers: {}, &block)
       query = query.empty? ? nil : query

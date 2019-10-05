@@ -176,6 +176,23 @@ describe EtrieveContentApi::Handler do
         )
         assert_requested stubbed_request
       end
+
+      it 'should set document content' do
+        doc_id = 100
+        file_path = File.join(File.expand_path(File.dirname(__FILE__)), 'test_stubs', 'text_file.txt')
+        stubbed_request = stub_request(
+          :post,
+          [
+            @base_url,
+            EtrieveContentApi::Handler::DOCUMENTS_PATH, doc_id, 'contents'
+          ].join('/')
+        )
+        @handler.set_document_content(
+          doc_id,
+          file_path
+        )
+        assert_requested stubbed_request
+      end
     end
 
     describe 'page_content' do
