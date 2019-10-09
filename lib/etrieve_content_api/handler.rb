@@ -88,12 +88,10 @@ module EtrieveContentApi
 
     # Creates a new document, returns JSON results of operation, including
     # new document ID
-    def create_document(area_code: '', document_name: '', key_fields: {}, headers: {}, &block)
+    # key fields should be passed as an array of hashes:
+    #   {fieldCode: '', value: '', parentFieldCode: ''}
+    def create_document(area_code: '', document_name: '', field_values: [], headers: {}, &block)
       headers = headers.empty? ? { "Content-Type" => "application/json" } : headers
-      field_values = []
-      key_fields.each do |key, value|
-        field_values << "{'fieldCode': '#{key}', 'value': '#{value}'}"
-      end
       params = {
         areaCode: area_code,
         documentTypeCode: document_name,
