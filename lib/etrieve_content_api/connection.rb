@@ -198,6 +198,8 @@ module EtrieveContentApi
           return response
         when 401
           raise AuthenticationError
+        when 400
+          raise ArgumentError, response
         else
           # Some other error. Let it bubble up.
           response.return!(&block)
