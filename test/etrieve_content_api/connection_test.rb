@@ -386,7 +386,7 @@ describe EtrieveContentApi::Connection do
       end
     end
 
-    # make sure unhandled error bubbles up
+    # display useful errors
     describe 'for bad request' do
       before do
         @stubbed_get = stub_request(
@@ -399,7 +399,25 @@ describe EtrieveContentApi::Connection do
 
       it 'should raise bad request error' do
         -> { @conn.get_custom_connection('go') }.must_raise(
-          RestClient::BadRequest
+          ArgumentError
+        )
+      end
+    end
+
+    # make sure unhandled error bubbles up
+    describe 'for bad request' do
+      before do
+        @stubbed_get = stub_request(
+          :get,
+          [@base_url, 'go'].join('/')
+        ).to_return(
+          status: 405
+        )
+      end
+
+      it 'should raise bad request error' do
+        -> { @conn.get_custom_connection('go') }.must_raise(
+          RestClient::MethodNotAllowed
         )
       end
     end
@@ -451,7 +469,7 @@ describe EtrieveContentApi::Connection do
     end
 
     # make sure unhandled error bubbles up
-    describe 'for bad request' do
+    describe 'for method not allowed' do
       before do
         @post_params = { 'a' => 'b' }
         @stubbed_post = stub_request(
@@ -466,7 +484,28 @@ describe EtrieveContentApi::Connection do
 
       it 'should raise bad request error' do
         -> { @conn.post_custom_connection('go', payload: @post_params) }.must_raise(
-          RestClient::BadRequest
+          ArgumentError
+        )
+      end
+    end
+
+    # make sure unhandled error bubbles up
+    describe 'for method not allowed' do
+      before do
+        @post_params = { 'a' => 'b' }
+        @stubbed_post = stub_request(
+          :post,
+          [@base_url, 'go'].join('/')
+        ).with(
+          body: @post_params
+        ).to_return(
+          status: 405
+        )
+      end
+
+      it 'should raise bad request error' do
+        -> { @conn.post_custom_connection('go', payload: @post_params) }.must_raise(
+          RestClient::MethodNotAllowed
         )
       end
     end
