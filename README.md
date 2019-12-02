@@ -1,4 +1,3 @@
-# Reed no longer maintains this gem.
 # EtrieveContentApi
 
 Ruby wrapper for accessing the Etrieve Content API. Document metadata and content retrieval is currently supported. Document writes may be supported in a future version.
