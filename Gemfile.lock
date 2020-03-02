@@ -24,7 +24,7 @@ GEM
     minitest (5.11.3)
     netrc (0.11.0)
     public_suffix (3.1.0)
-    rake (10.5.0)
+    rake (12.3.3)
     rest-client (2.0.2)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
@@ -45,7 +45,7 @@ DEPENDENCIES
   bundler (~> 1.16)
   etrieve_content_api!
   minitest
-  rake (~> 10.0)
+  rake (~> 12.3)
   webmock
 
 BUNDLED WITH
